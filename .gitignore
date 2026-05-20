@@ -1,0 +1,17 @@
+# Credentials (Factor III)
+.env
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Python logs and cache
+*.log
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Docker data (Optional, since it's a volume)
+postgres_data/
