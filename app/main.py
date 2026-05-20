@@ -4,7 +4,7 @@ import logging
 
 # Import database and agent logic
 from app.database import get_db
-from app.executor import run_agentic_query
+from app.executor import run_agentic_query, run_mini_sql_agent
 
 # Import your routers
 from .routers import (
@@ -23,6 +23,36 @@ logger = logging.getLogger("api_logger")
 
 # Initialize ONE FastAPI instance
 app = FastAPI(title="ClassicModels Agentic Text-to-SQL API")
+from pydantic import BaseModel
+
+# This tells FastAPI what the JSON input should look like
+class AgentRequest(BaseModel):
+    question: str
+
+# endpoint to use this model
+@app.post("/agent/sql", tags=["Task 4"])
+async def task_4_agent(payload: AgentRequest, db: Session = Depends(get_db)):
+    # access the question :
+    user_question = payload.question
+    
+    # agent logic
+    response = run_mini_sql_agent(user_question, db)
+    return response
+
+# @app.post("/agent/sql", tags=["Task 4: Mini SQL Agent"])
+# async def task_4_agent(payload: dict, db: Session = Depends(get_db)):
+#     """
+#     Task 4 specific endpoint.
+#     Expects JSON: {"question": "How many shipped orders are from USA customers?"}
+#     """
+#     question = payload.get("question")
+#     if not question:
+#         raise HTTPException(status_code=400, detail="No question provided in payload")
+
+#     # This calls the upgraded 3-retry logic
+#     response = run_mini_sql_agent(question, db)
+    
+#     return response
 
 # --- Agentic Text-to-SQL Endpoint ---
 @app.post("/agent/query", tags=["AI Agent"])

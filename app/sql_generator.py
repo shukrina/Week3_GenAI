@@ -51,3 +51,18 @@ def generate_sql_pipeline(user_question: str, error_message: str = None):
     # Clean markdown backticks if Gemini added them
     generated_sql = generated_sql.replace("```sql", "").replace("```", "").strip()
     return generated_sql.replace("```sql", "").replace("```", "").strip()
+
+# for task 4
+
+def generate_summary(question: str, result_data: list):
+    """Converts the raw SQL results into a human-friendly sentence."""
+    summary_instruction = f"""
+    You are a data analyst. Based on the user's question: "{question}" 
+    and the following data retrieved from the database: {result_data}
+    
+    Provide a concise, professional one-sentence summary of the answer.
+    If no data was found, say "No records were found for that request."
+    """
+    # Use the existing gemini.ask method
+    summary = gemini.ask(summary_instruction, "Summarize the data.")
+    return summary.strip()
